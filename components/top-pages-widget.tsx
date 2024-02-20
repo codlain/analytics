@@ -26,7 +26,6 @@ export const TopPagesWidget = ({ domainData, data }: TopPagesWidgetProps) => {
       (data?.data ?? []).map((d) => ({
         name: d.pathname,
         value: d[sorting],
-        href: `https://${domainData.domain}${d.pathname}`,
       })),
     [data?.data, domainData.domain, sorting]
   );
