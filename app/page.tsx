@@ -1,3 +1,4 @@
+import CurrentVisitors from "@/components/current-visitors";
 import { DateFilter } from "@/components/date-filter";
 import InView from "@/components/in-view";
 import { KpisWidget } from "@/components/kpis-widget";
@@ -9,6 +10,7 @@ import {
   getKpis,
   getTopPages,
   getTrend,
+  querySQL,
 } from "@/lib/tinybird";
 import { KpiType } from "@/types/kpis";
 import { TopPagesSorting } from "@/types/top-pages";
@@ -54,10 +56,21 @@ const DashboardPage = async ({
     searchParams?.date_to
   );
 
+  const currentVisitors = await querySQL<{ visits: number }>(
+    `SELECT uniq(session_id) AS visits FROM analytics_hits
+      WHERE timestamp >= (now() - interval 5 minute) FORMAT JSON`
+  ).then((resp) => resp.data[0]?.visits || 0);
+
   return (
-    <div className="min-h-screen px-5 py-5 text-sm leading-5 sm:px-10 text-secondary">
-      <DateFilter />
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-screen px-5 py-5 text-sm leading-5 sm:px-10">
+      <div className="flex flex-col gap-4 mx-auto max-w-7xl">
+        <div className="flex justify-between">
+          <div className="flex items-center gap-4">
+            <span className="text-lg leading-6">DOMAIN</span>
+            <CurrentVisitors visitors={currentVisitors} />
+          </div>
+          <DateFilter />
+        </div>
         <div className="space-y-6 sm:space-y-10">
           <div className="grid grid-cols-2 gap-5 sm:gap-10 grid-rows-3-auto">
             <div className="col-span-2" style={{ height: WidgetHeight.XLarge }}>
