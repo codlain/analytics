@@ -51,16 +51,4 @@ export const KPI_OPTIONS: KpiOption[] = [
     tooltip: "pageviews",
     formatter: kFormatter,
   },
-  {
-    label: "avg. visit time",
-    value: "avg_session_sec",
-    tooltip: "avg. visit time",
-    formatter: formatMinSec,
-  },
-  {
-    label: "bounce rate",
-    value: "bounce_rate",
-    tooltip: "bounce rate",
-    formatter: formatPercentage,
-  },
 ];

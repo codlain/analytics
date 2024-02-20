@@ -1,6 +1,5 @@
 import CurrentVisitors from "@/components/current-visitors";
 import { DateFilter } from "@/components/date-filter";
-import InView from "@/components/in-view";
 import { KpisWidget } from "@/components/kpis-widget";
 import { TopPagesWidget } from "@/components/top-pages-widget";
 import TrendWidget from "@/components/trend-widget";
@@ -14,14 +13,6 @@ import {
 } from "@/lib/tinybird";
 import { KpiType } from "@/types/kpis";
 import { TopPagesSorting } from "@/types/top-pages";
-import { Suspense } from "react";
-
-const enum WidgetHeight {
-  XLarge = 588,
-  Large = 472,
-  Medium = 344,
-  Small = 216,
-}
 
 const DashboardPage = async ({
   searchParams,
@@ -34,7 +25,10 @@ const DashboardPage = async ({
     last_days?: string;
   };
 }) => {
-  const kpiTotalsData = await getKpiTotals();
+  const kpiTotalsData = await getKpiTotals(
+    searchParams?.date_from,
+    searchParams?.date_to
+  );
 
   const kpi = (searchParams?.kpi || "pageviews") as KpiType;
   const kpisData = await getKpis(
@@ -73,36 +67,20 @@ const DashboardPage = async ({
         </div>
         <div className="space-y-6 sm:space-y-10">
           <div className="grid grid-cols-2 gap-5 sm:gap-10 grid-rows-3-auto">
-            <div className="col-span-2" style={{ height: WidgetHeight.XLarge }}>
-              <Suspense>
-                <KpisWidget kpiTotalsData={kpiTotalsData} kpisData={kpisData} />
-              </Suspense>
+            <div className="col-span-2">
+              <KpisWidget kpiTotalsData={kpiTotalsData} kpisData={kpisData} />
             </div>
             <div className="col-start-1 col-span-2 lg:col-span-1 grid grid-cols-1 gap-5 sm:gap-10 grid-rows-3-auto">
-              <InView height={WidgetHeight.Small}>
-                <Suspense>
-                  <TrendWidget data={trendData} />
-                </Suspense>
-              </InView>
-              <InView height={WidgetHeight.Large}>
-                <TopPagesWidget domainData={domainData} data={topPagesData} />
-              </InView>
-              <InView height={WidgetHeight.Large}>
-                <>{/* <TopLocationsWidget /> */}</>
-              </InView>
+              <TrendWidget data={trendData} />
+              <TopPagesWidget domainData={domainData} data={topPagesData} />
+              <>{/* <TopLocationsWidget /> */}</>
             </div>
             <div className="col-start-1 col-span-2 lg:col-start-2 lg:col-span-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-5 sm:gap-10 grid-rows-2-auto lg:grid-rows-3-auto">
               <div className="col-span-1 md:col-span-2 lg:col-span-1">
-                <InView height={WidgetHeight.Large}>
-                  <>{/* <TopSourcesWidget /> */}</>
-                </InView>
+                <>{/* <TopSourcesWidget /> */}</>
               </div>
-              <InView height={WidgetHeight.Medium}>
-                <>{/* <TopDevicesWidget /> */}</>
-              </InView>
-              <InView height={WidgetHeight.Medium}>
-                <>{/* <BrowsersWidget /> */}</>
-              </InView>
+              <>{/* <TopDevicesWidget /> */}</>
+              <>{/* <BrowsersWidget /> */}</>
             </div>
           </div>
         </div>

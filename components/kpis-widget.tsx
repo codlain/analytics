@@ -7,6 +7,7 @@ import { AreaChart } from "@tremor/react";
 import { useMemo } from "react";
 import { ChartData } from "@/types/charts";
 import { KpiTotals } from "@/types/kpis";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 interface KpisWidgetProps {
   kpiTotalsData: KpiTotals;
@@ -14,7 +15,7 @@ interface KpisWidgetProps {
 }
 
 export const KpisWidget = ({ kpisData, kpiTotalsData }: KpisWidgetProps) => {
-  const { kpi, setKpi, kpiOption } = useKpis();
+  const { kpiOption } = useKpis();
 
   const chartData = useMemo(
     () =>
@@ -33,10 +34,10 @@ export const KpisWidget = ({ kpisData, kpiTotalsData }: KpisWidgetProps) => {
   );
 
   return (
-    <Widget>
-      <WidgetTitle isVisuallyHidden>KPIs</WidgetTitle>
-      <KpisTabs value={kpi} onChange={setKpi} totals={kpiTotalsData} />
-      <WidgetContent noData={!chartData?.length} className="pt-2 mt-4">
+    <Card>
+      <CardTitle className="sr-only">KPIs</CardTitle>
+      <KpisTabs totals={kpiTotalsData} />
+      <CardContent className="pt-2 mt-4">
         <AreaChart
           className="mt-4 h-72"
           data={chartData}
@@ -48,7 +49,7 @@ export const KpisWidget = ({ kpisData, kpiTotalsData }: KpisWidgetProps) => {
           showLegend={false}
           showGradient={false}
         />
-      </WidgetContent>
-    </Widget>
+      </CardContent>
+    </Card>
   );
 };
