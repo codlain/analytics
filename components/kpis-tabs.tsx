@@ -17,7 +17,7 @@ export const KpisTabs = ({ totals }: KpisTabsProps) => {
           onClick={() => setKpi(value)}
           key={value}
           variant={value === kpi ? "secondary" : "ghost"}
-          className="px-8 py-16"
+          className="px-12 py-16"
         >
           <span>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pl-0">

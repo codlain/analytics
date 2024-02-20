@@ -43,7 +43,7 @@ export const KpisWidget = ({ kpisData, kpiTotalsData }: KpisWidgetProps) => {
           data={chartData}
           index="date"
           categories={[kpiOption.label]}
-          colors={["#0761d1"]}
+          colors={["blue"]}
           yAxisWidth={30}
           valueFormatter={kpiOption.formatter}
           showLegend={false}

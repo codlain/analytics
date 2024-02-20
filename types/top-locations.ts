@@ -15,3 +15,9 @@ export type TopLocation = {
   visits: number;
   hits: number;
 };
+
+export type TopLocations = {
+  data: TopLocation[];
+  locations: string[];
+  labels: number[];
+};

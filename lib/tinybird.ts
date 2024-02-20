@@ -13,6 +13,7 @@ import { TopBrowsers, TopBrowsersData, browsers } from "@/types/top-browsers";
 import { TopDevices, TopDevicesData, devices } from "@/types/top-devices";
 import {
   TopLocation,
+  TopLocations,
   TopLocationsData,
   TopLocationsSorting,
 } from "@/types/top-locations";
@@ -198,7 +199,7 @@ export const getTopLocations = async (
   sorting: TopLocationsSorting,
   date_from?: string,
   date_to?: string
-) => {
+): Promise<TopLocations> => {
   const { data: queryData } = await queryPipe<TopLocationsData>(
     "top_locations",
     { limit: 8, date_from, date_to }

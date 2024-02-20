@@ -35,7 +35,7 @@ export default function TrendWidget({ data }: TrendWidgetProps) {
           data={chartData}
           index="Date"
           categories={["Number of visits"]}
-          colors={["primary"]}
+          colors={["blue"]}
           className="h-32"
           showXAxis={false}
           showYAxis={false}
