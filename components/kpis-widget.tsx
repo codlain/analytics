@@ -7,7 +7,6 @@ import { AreaChart } from "@tremor/react";
 import { useMemo } from "react";
 import { ChartData } from "@/types/charts";
 import { KpiTotals } from "@/types/kpis";
-import NewAreaChart from "@/components/new-area-chart";
 
 interface KpisWidgetProps {
   kpiTotalsData: KpiTotals;
@@ -49,7 +48,6 @@ export const KpisWidget = ({ kpisData, kpiTotalsData }: KpisWidgetProps) => {
           showLegend={false}
           showGradient={false}
         />
-        {/* <NewAreaChart /> */}
       </WidgetContent>
     </Widget>
   );

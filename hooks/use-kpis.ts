@@ -1,9 +1,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import useDateFilter from "@/hooks/use-date-filter";
 import { KPI_OPTIONS, KpiType, isKpi } from "@/types/kpis";
 
 export default function useKpis() {
-  const { from, to } = useDateFilter();
   const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
