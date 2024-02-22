@@ -7,9 +7,12 @@ import { PageWithSearchParams } from "@/types";
 interface TrendProps extends PageWithSearchParams {}
 
 const Trend = async ({ searchParams }: TrendProps) => {
-  const data = await getTrend(searchParams?.date_from, searchParams?.date_to);
+  const { data, totalVisits } = await getTrend(
+    searchParams?.date_from,
+    searchParams?.date_to
+  );
 
-  const chartData = (data?.data ?? []).map((d) => ({
+  const chartData = (data ?? []).map((d) => ({
     Date: moment(d.t).format("HH:mm"),
     "Number of visits": d.visits,
   }));
@@ -20,7 +23,7 @@ const Trend = async ({ searchParams }: TrendProps) => {
         <div className="flex items-center justify-between">
           <CardTitle>Users in last 30 minutes</CardTitle>
           <h3 className="text-foreground font-normal text-xl">
-            {data?.totalVisits ?? 0}
+            {totalVisits ?? 0}
           </h3>
         </div>
       </CardHeader>

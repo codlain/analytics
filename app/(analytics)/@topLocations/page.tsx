@@ -11,13 +11,13 @@ const TopLocations = async ({ searchParams }: TopLocationsProps) => {
   const sorting = (searchParams?.top_pages_sorting ||
     TopPagesSorting.Visitors) as TopPagesSorting;
 
-  const data = await getTopLocations(
+  const { data } = await getTopLocations(
     sorting,
     searchParams?.date_from,
     searchParams?.date_to
   );
 
-  const chartData = (data?.data ?? []).map((d) => ({
+  const chartData = (data ?? []).map((d) => ({
     name: d.location,
     value: d[sorting],
   }));
@@ -67,7 +67,7 @@ const TopLocations = async ({ searchParams }: TopLocationsProps) => {
             <BarList data={chartData} />
           </div>
           <div className="flex flex-col col-span-1 row-span-4 gap-2">
-            {(data?.data ?? []).map(({ location, visits }) => (
+            {(data ?? []).map(({ location, visits }) => (
               <div
                 key={location}
                 className="flex items-center justify-end w-full text-neutral-64 h-9"
@@ -77,7 +77,7 @@ const TopLocations = async ({ searchParams }: TopLocationsProps) => {
             ))}
           </div>
           <div className="flex flex-col col-span-1 row-span-4 gap-2">
-            {(data?.data ?? []).map(({ location, hits }) => (
+            {(data ?? []).map(({ location, hits }) => (
               <div
                 key={location}
                 className="flex items-center justify-end w-full text-neutral-64 h-9"

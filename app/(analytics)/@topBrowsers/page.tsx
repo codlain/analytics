@@ -9,7 +9,7 @@ import { DonutChart } from "@/components/donut-chart";
 interface TopBrowsersProps extends PageWithSearchParams {}
 
 const TopBrowsers = async ({ searchParams }: TopBrowsersProps) => {
-  const data = await getTopBrowsers(
+  const { data } = await getTopBrowsers(
     searchParams?.date_from,
     searchParams?.date_to
   );
@@ -21,7 +21,7 @@ const TopBrowsers = async ({ searchParams }: TopBrowsersProps) => {
       </CardHeader>
       <CardContent>
         <div className="w-full h-full grid grid-cols-2">
-          <DonutChart index="browser" data={data?.data || []} />
+          <DonutChart index="browser" data={data || []} />
           <div className="justify-self-end">
             <div className="grid gap-y-1 gap-4 grid-cols-2">
               <div className="text-xs tracking-widest font-medium uppercase text-center truncate">
@@ -30,7 +30,7 @@ const TopBrowsers = async ({ searchParams }: TopBrowsersProps) => {
               <div className="text-xs tracking-widest font-medium uppercase text-right truncate">
                 Visitors
               </div>
-              {(data?.data ?? []).map(({ browser, visits }, index) => (
+              {(data ?? []).map(({ browser, visits }, index) => (
                 <Fragment key={browser}>
                   <div className="flex items-center gap-2 text-sm leading-5 text-neutral-64 h-9 px-4 py-2 rounded-md z-10">
                     <div

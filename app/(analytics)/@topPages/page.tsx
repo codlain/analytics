@@ -12,13 +12,13 @@ interface TopPagesProps extends PageWithSearchParams {}
 const TopPages = async ({ searchParams }: TopPagesProps) => {
   const sorting = searchParams?.top_pages_sorting as TopPagesSorting;
 
-  const data = await getTopPages(
+  const { data } = await getTopPages(
     sorting,
     searchParams?.date_from,
     searchParams?.date_to
   );
 
-  const chartData = (data?.data ?? []).map((d) => ({
+  const chartData = (data ?? []).map((d) => ({
     name: d.pathname,
     value: d[sorting],
   }));
@@ -68,7 +68,7 @@ const TopPages = async ({ searchParams }: TopPagesProps) => {
             <BarList data={chartData} />
           </div>
           <div className="flex flex-col col-span-1 row-span-4 gap-2">
-            {(data?.data ?? []).map(({ pathname, visits }) => (
+            {(data ?? []).map(({ pathname, visits }) => (
               <div
                 key={pathname}
                 className="flex items-center justify-end w-full text-foreground h-9"
@@ -78,7 +78,7 @@ const TopPages = async ({ searchParams }: TopPagesProps) => {
             ))}
           </div>
           <div className="flex flex-col col-span-1 row-span-4 gap-2">
-            {(data?.data ?? []).map(({ pathname, hits }) => (
+            {(data ?? []).map(({ pathname, hits }) => (
               <div
                 key={pathname}
                 className="flex items-center justify-end w-full text-foreground h-9"

@@ -1,18 +1,15 @@
 import { DateFilter } from "@/components/date-filter";
-
-import { querySQL } from "@/lib/tinybird";
+import { getCurrentVisitors, getDomain } from "@/lib/tinybird";
 import { cn } from "@/lib/utils";
 
 const DashboardPage = async () => {
-  const currentVisitors = await querySQL<{ visits: number }>(
-    `SELECT uniq(session_id) AS visits FROM analytics_hits
-      WHERE timestamp >= (now() - interval 5 minute) FORMAT JSON`
-  ).then((resp) => resp.data[0]?.visits || 0);
+  const { domain } = await getDomain();
+  const currentVisitors = await getCurrentVisitors();
 
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-4">
-        <span className="text-lg leading-6">DOMAIN</span>
+        <span className="text-lg leading-6">{domain}</span>
         <div className="flex items-center gap-2">
           <span
             className={cn(

@@ -1,20 +1,13 @@
 import { KPI_OPTIONS, KpiType } from "@/types/kpis";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { getKpiTotals, getKpis } from "@/lib/tinybird";
+import { PageWithSearchParams } from "@/types";
 import { Tabs } from "./tabs";
 import { AreaChart } from "./area-chart";
 
-interface KpisWidgetProps {
-  searchParams?: {
-    kpi?: string;
-    date_from?: string;
-    date_to?: string;
-    top_pages_sorting?: string;
-    last_days?: string;
-  };
-}
+interface KpisProps extends PageWithSearchParams {}
 
-const KpisWidget = async ({ searchParams }: KpisWidgetProps) => {
+const Kpis = async ({ searchParams }: KpisProps) => {
   const kpi = (searchParams?.kpi || "pageviews") as KpiType;
 
   const kpiTotalsData = await getKpiTotals(
@@ -53,4 +46,4 @@ const KpisWidget = async ({ searchParams }: KpisWidgetProps) => {
   );
 };
 
-export default KpisWidget;
+export default Kpis;

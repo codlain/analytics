@@ -7,12 +7,12 @@ import { BarList } from "@/components/bar-list";
 interface TopSourcesProps extends PageWithSearchParams {}
 
 const TopSources = async ({ searchParams }: TopSourcesProps) => {
-  const data = await getTopSources(
+  const { data } = await getTopSources(
     searchParams?.date_from,
     searchParams?.date_to
   );
 
-  const chartData = (data?.data ?? []).map((d) => ({
+  const chartData = (data ?? []).map((d) => ({
     name: d.referrer,
     value: d.visits,
     href: d.href,
@@ -35,7 +35,7 @@ const TopSources = async ({ searchParams }: TopSourcesProps) => {
             <BarList data={chartData} />
           </div>
           <div className="flex flex-col col-span-1 row-span-4 gap-2">
-            {(data?.data ?? []).map(({ referrer, visits }) => (
+            {(data ?? []).map(({ referrer, visits }) => (
               <div
                 key={referrer}
                 className="flex items-center justify-end w-full text-neutral-64 h-9"

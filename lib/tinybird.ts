@@ -8,7 +8,7 @@ import {
 import { ChartData, ChartValue } from "@/types/charts";
 import { KpiTotals, KpiType, KpisData } from "@/types/kpis";
 import moment from "moment";
-import { arrayHasCurrentDate } from "./utils";
+import { arrayHasCurrentDate } from "@/lib/utils";
 import { TopBrowsers, TopBrowsersData, browsers } from "@/types/top-browsers";
 import { TopDevices, TopDevicesData, devices } from "@/types/top-devices";
 import {
@@ -340,4 +340,11 @@ export const getDomain = async (): Promise<DomainData> => {
     domain,
     logo,
   };
+};
+
+export const getCurrentVisitors = async () => {
+  return await querySQL<{ visits: number }>(
+    `SELECT uniq(session_id) AS visits FROM analytics_hits
+      WHERE timestamp >= (now() - interval 5 minute) FORMAT JSON`
+  ).then((resp) => resp.data[0]?.visits || 0);
 };
