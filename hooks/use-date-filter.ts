@@ -1,3 +1,5 @@
+"use client";
+
 import moment from "moment";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";

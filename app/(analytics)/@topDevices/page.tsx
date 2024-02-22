@@ -1,17 +1,19 @@
-"use client";
-
 import { Fragment } from "react";
-import { DonutChart } from "@tremor/react";
 import { formatNumber } from "@/lib/utils";
 import { tremorPieChartColors } from "@/styles/tremor-colors";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { TopDevices } from "@/types/top-devices";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageWithSearchParams } from "@/types";
+import { getTopDevices } from "@/lib/tinybird";
+import { DonutChart } from "../../../components/donut-chart";
 
-interface TopDevicesWidgetProps {
-  data: TopDevices;
-}
+interface TopDevicesProps extends PageWithSearchParams {}
 
-export const TopDevicesWidget = ({ data }: TopDevicesWidgetProps) => {
+const TopDevicesWidget = async ({ searchParams }: TopDevicesProps) => {
+  const data = await getTopDevices(
+    searchParams?.date_from,
+    searchParams?.date_to
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -19,14 +21,7 @@ export const TopDevicesWidget = ({ data }: TopDevicesWidgetProps) => {
       </CardHeader>
       <CardContent>
         <div className="w-full h-full grid grid-cols-2">
-          <DonutChart
-            data={data?.data ?? []}
-            category="visits"
-            index="device"
-            colors={tremorPieChartColors.map(([color]) => color)}
-            showLabel={false}
-            valueFormatter={formatNumber}
-          />
+          <DonutChart index="device" data={data?.data ?? []} />
           <div className="justify-self-end">
             <div className="grid grid-cols-2 gap-y-1 gap-4">
               <div className="text-xs tracking-widest font-medium uppercase text-center truncate">
@@ -58,3 +53,5 @@ export const TopDevicesWidget = ({ data }: TopDevicesWidgetProps) => {
     </Card>
   );
 };
+
+export default TopDevicesWidget;

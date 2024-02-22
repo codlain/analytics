@@ -1,3 +1,5 @@
+"use client";
+
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { KPI_OPTIONS, KpiType, isKpi } from "@/types/kpis";
 

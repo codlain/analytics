@@ -196,7 +196,7 @@ const getFlagEmoji = (countryCode: string) => {
 };
 
 export const getTopLocations = async (
-  sorting: TopLocationsSorting,
+  sorting: TopPagesSorting,
   date_from?: string,
   date_to?: string
 ): Promise<TopLocations> => {

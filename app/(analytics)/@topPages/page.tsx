@@ -1,33 +1,27 @@
-"use client";
-
-import { BarList } from "@tremor/react";
-import { useMemo } from "react";
+import React from "react";
 import { cn, formatNumber } from "@/lib/utils";
 import { TopPagesSorting } from "@/types/top-pages";
-import { TopPagesChartData } from "@/types/charts";
-import { DomainData } from "@/types/domain";
-import useSortingParams from "@/hooks/use-sorting-params";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageWithSearchParams } from "@/types";
+import { getDomain, getTopPages } from "@/lib/tinybird";
+import Link from "next/link";
+import { BarList } from "@/components/bar-list";
 
-interface TopPagesWidgetProps {
-  domainData: DomainData;
-  data: TopPagesChartData;
-}
+interface TopPagesProps extends PageWithSearchParams {}
 
-export const TopPagesWidget = ({ domainData, data }: TopPagesWidgetProps) => {
-  const [sorting, setSorting] = useSortingParams({
-    key: "top_pages_sorting",
-    values: Object.values(TopPagesSorting),
-  });
+const TopPages = async ({ searchParams }: TopPagesProps) => {
+  const sorting = searchParams?.top_pages_sorting as TopPagesSorting;
 
-  const chartData = useMemo(
-    () =>
-      (data?.data ?? []).map((d) => ({
-        name: d.pathname,
-        value: d[sorting],
-      })),
-    [data?.data, domainData.domain, sorting]
+  const data = await getTopPages(
+    sorting,
+    searchParams?.date_from,
+    searchParams?.date_to
   );
+
+  const chartData = (data?.data ?? []).map((d) => ({
+    name: d.pathname,
+    value: d[sorting],
+  }));
 
   return (
     <Card>
@@ -39,27 +33,39 @@ export const TopPagesWidget = ({ domainData, data }: TopPagesWidgetProps) => {
           <div className="col-span-3 text-xs font-semibold tracking-widest text-gray-500 uppercase h-5">
             Content
           </div>
-          <div
+          <Link
+            href={{
+              query: {
+                ...searchParams,
+                top_pages_sorting: TopPagesSorting.Visitors,
+              },
+            }}
+            scroll={false}
             className={cn(
               "col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5",
               sorting === TopPagesSorting.Visitors && "text-primary"
             )}
-            onClick={() => setSorting(TopPagesSorting.Visitors)}
           >
             Visits
-          </div>
-          <div
+          </Link>
+          <Link
+            href={{
+              query: {
+                ...searchParams,
+                top_pages_sorting: TopPagesSorting.Pageviews,
+              },
+            }}
+            scroll={false}
             className={cn(
               "col-span-1 row-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5",
               sorting === TopPagesSorting.Pageviews && "text-primary"
             )}
-            onClick={() => setSorting(TopPagesSorting.Pageviews)}
           >
             Pageviews
-          </div>
+          </Link>
 
           <div className="col-span-3">
-            <BarList data={chartData} valueFormatter={() => ""} />
+            <BarList data={chartData} />
           </div>
           <div className="flex flex-col col-span-1 row-span-4 gap-2">
             {(data?.data ?? []).map(({ pathname, visits }) => (
@@ -86,3 +92,5 @@ export const TopPagesWidget = ({ domainData, data }: TopPagesWidgetProps) => {
     </Card>
   );
 };
+
+export default TopPages;

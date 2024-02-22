@@ -1,30 +1,26 @@
-"use client";
-
-import { BarList } from "@tremor/react";
-import { TopLocations, TopLocationsSorting } from "@/types/top-locations";
+import { getTopLocations } from "@/lib/tinybird";
+import { PageWithSearchParams, TopPagesSorting } from "@/types";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import useSortingParams from "@/hooks/use-sorting-params";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { BarList } from "@/components/bar-list";
 
-interface TopLocationsWidgetProps {
-  data: TopLocations;
-}
+interface TopLocationsProps extends PageWithSearchParams {}
 
-export const TopLocationsWidget = ({ data }: TopLocationsWidgetProps) => {
-  const [sorting, setSorting] = useSortingParams({
-    key: "top_locations_sorting",
-    values: Object.values(TopLocationsSorting),
-  });
+const TopLocations = async ({ searchParams }: TopLocationsProps) => {
+  const sorting = (searchParams?.top_pages_sorting ||
+    TopPagesSorting.Visitors) as TopPagesSorting;
 
-  const chartData = useMemo(
-    () =>
-      (data?.data ?? []).map((d) => ({
-        name: d.location,
-        value: d[sorting],
-      })),
-    [data?.data, sorting]
+  const data = await getTopLocations(
+    sorting,
+    searchParams?.date_from,
+    searchParams?.date_to
   );
+
+  const chartData = (data?.data ?? []).map((d) => ({
+    name: d.location,
+    value: d[sorting],
+  }));
 
   return (
     <Card>
@@ -36,27 +32,39 @@ export const TopLocationsWidget = ({ data }: TopLocationsWidgetProps) => {
           <div className="col-span-3 text-xs font-semibold tracking-widest text-gray-500 uppercase h-5">
             Country
           </div>
-          <div
+          <Link
+            href={{
+              query: {
+                ...searchParams,
+                top_pages_sorting: TopPagesSorting.Visitors,
+              },
+            }}
+            scroll={false}
             className={cn(
               "col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5",
-              sorting === TopLocationsSorting.Visitors && "text-primary"
+              sorting === TopPagesSorting.Visitors && "text-primary"
             )}
-            onClick={() => setSorting(TopLocationsSorting.Visitors)}
           >
             Visits
-          </div>
-          <div
+          </Link>
+          <Link
+            href={{
+              query: {
+                ...searchParams,
+                top_pages_sorting: TopPagesSorting.Pageviews,
+              },
+            }}
+            scroll={false}
             className={cn(
               "col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5",
-              sorting === TopLocationsSorting.Pageviews && "text-primary"
+              sorting === TopPagesSorting.Pageviews && "text-primary"
             )}
-            onClick={() => setSorting(TopLocationsSorting.Pageviews)}
           >
             Pageviews
-          </div>
+          </Link>
 
           <div className="col-span-3">
-            <BarList data={chartData} valueFormatter={() => ""} />
+            <BarList data={chartData} />
           </div>
           <div className="flex flex-col col-span-1 row-span-4 gap-2">
             {(data?.data ?? []).map(({ location, visits }) => (
@@ -83,3 +91,5 @@ export const TopLocationsWidget = ({ data }: TopLocationsWidgetProps) => {
     </Card>
   );
 };
+
+export default TopLocations;
