@@ -4,7 +4,6 @@ import {
   formatPercentage,
   kFormatter,
 } from "@/lib/utils";
-import { ChartValue } from "./charts";
 
 export type KpisData = {
   date: string;
